@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe Game</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+        body{
+            background-image: url('/bg2.jpg');
+            background-size: cover;
+
+        }
+        td {
+            width: 125px;
+            height: 125px;
+            background-size:contain;
+            background-repeat: no-repeat;
+        }
+        table {
+            margin: 5px auto;
+        }
+        .vert {
+            border-left: 2px solid black;
+            border-right: 2px solid black;
+        }
+        .hori {
+            border-top: 2px solid black;
+            border-bottom: 2px solid black;
+        }
+        .othersChance{
+            background-color: rgba(0, 0, 0, 0.8);
+            background-size: cover;
+            padding: 20px 0;
+            border-radius: 5px;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 9;
+            text-align: center;
+            color: white;
+            font-size: xx-large;
+            font-weight: 700;
+            top: 0px;
+            right: 0;
+        }
+        .othersChance>p{
+            vertical-align: middle;
+        }
+        #copyright{
+          display: block;
+          position: absolute;
+          bottom: -100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="text-center mt-3 mb-3">
+            <img src="logo.png" width="40%">
+        </div>
+        <div class="row">
+            <div class="col-md-3 text-center">
+                <div class="card p-4 mb-3" id="initial-controls">
+                    <b>GAME OPTIONS</b> <br>
+                    <div class="controls">
+                        <button class="btn btn-success btn-block" id="start-game" data-toggle="modal" data-target="#startGameModal">Start new game</button> <br>
+                        <button class="btn btn-primary btn-block" id="join-game" data-toggle="modal" data-target="#joinGameModal">Join a player</button>
+                    </div>
+                </div>
+                <div class="card d-none p-5 mb-3" id="playing">
+                    <div id="playingWith">
+                        Started playing game with
+                    </div>
+                </div>
+                <div class="card d-none p-3 text-center mb-2 bg-success text-light" id="yourChance">
+                    <b>YOUR CHANCE</b>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div style="position: relative; padding: 15px; height: 100%;">
+                    <div class="othersChance" id="othersChance">
+                        <p id="overlayMessage"></p>
+                    </div>
+                    <div class="othersChance d-none" id="gameWon">
+                        <p id="overlayMessageWon"></p>
+                    </div>
+                    <table id="game" class="mt-5">
+                        <tr>
+                            <td id="a1" data-val="0"></td>
+                            <td class="vert" id="a2" data-val="0"></td>
+                            <td id="a3" data-val="0"></td>
+                        </tr>
+                        <tr>
+                            <td class="hori" id="b1" data-val="0"></td>
+                            <td class="vert hori" id="b2" data-val="0"></td>
+                            <td class="hori" id="b3" data-val="0"></td>
+                        </tr>
+                        <tr>
+                            <td id="c1" data-val="0"></td>
+                            <td class="vert" id="c2" data-val="0"></td>
+                            <td id="c3" data-val="0"></td>
+                        </tr>
+                    </table>
+                </div>
+
+
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card p-4">
+                    <b>START A GAME</b>
+                    <p>To start a game, click on "Start Game" button, enter your name and copy the game code. Share the game code with the person you want to play with.</p> <br> <br>
+                    <b>JOIN PLAYER</b>
+                    <p>To join, click on "Join player button", enter your name, enter the game code shared by your friend and click Join.</p><br>
+
+                </div>
+            </div>
+        </div>
+        <p  class="text-center">© Copyright Karan Karamchandani. All Rights Reserved</p>
+    </div>
+
+
+
+    <!-- Start a game modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="startGameModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Start new game</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body text-center">
+                <input type="text" placeholder="Enter your name" id="hostName" class="form-control mb-2" required>
+              <div class="row mb-2">
+                  <div class="col-md-9">
+
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">Game code: </div>
+                        </div>
+                        <input type="text" class="form-control" id="myGameCode" data-toggle="tooltip" data-placement="top" title="Copied">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <button class="btn btn-primary" onclick="copyMyCode('myGameCode')">Copy</button>
+                  </div>
+              </div>
+              <div class="row mb-2">
+                  <div class="col-md-9">
+
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">Share URL: </div>
+                        </div>
+                        <input type="text" class="form-control" id="myGameUrl" data-toggle="tooltip" data-placement="top" title="Copied">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <button class="btn btn-primary" onclick="copyMyCode('myGameUrl')">Copy</button>
+                  </div>
+              </div> <br>
+              <p>Copy and share your game code or link with other player</p> <br>
+              <button class="btn btn-block btn-success" id="startPlay">Start</button>
+            </div>
+            <!-- <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div> -->
+          </div>
+        </div>
+      </div><!--Start a game modal end-->
+
+
+
+    <!-- Join a game modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="joinGameModal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Join a game</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">Enter your name: </div>
+                    </div>
+                    <input type="text" id="joineeName" class="form-control">
+                  </div>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">Game code: </div>
+                </div>
+                <input type="text" id="otherGameCode" class="form-control">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" id="joinPlay" class="btn btn-primary">Join</button>
+            </div>
+          </div>
+        </div>
+      </div><!--Join a game modal end-->
+
+
+      <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="socket.io.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
